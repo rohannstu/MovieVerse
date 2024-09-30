@@ -22,8 +22,8 @@ public class Movie {
 
     //Validations
     //DB level validation --> Application level validations
-    @Column(nullable = false, length = 200)
-    @NotBlank(message = "Please provide movies title")
+    @Column(nullable = false, length = 200) //DB level
+    @NotBlank(message = "Please provide movies title") // application level
     private String title;
 
     @Column(nullable = false, length = 200)
