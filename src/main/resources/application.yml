@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    username: postgres
+    password: chill_101
+    url: jdbc:postgresql://localhost:5432/movies
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show_sql: true
+    properties:
+      hibernate:
+        formate_sql: true
+
