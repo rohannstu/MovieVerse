@@ -1,5 +1,6 @@
 package org.packages.movieverse.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -15,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieDto {
-
     private Integer movieId;
 
     @NotBlank(message = "Please provide movies title")

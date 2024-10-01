@@ -16,26 +16,26 @@ import java.io.InputStream;
 @RestController
 @RequestMapping("/file/")
 public class FileController {
-   private final FileService fileService;
+    private final FileService fileService;
 
-   public FileController(FileService fileService) {
-       this.fileService = fileService;
-   }
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
-   @Value("${projects.poster")
-   private String path;
+    @Value("${project.poster}")
+    private String path;
 
-   //File uploading
-   @PostMapping("/upload")
-   public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
+    //File uploading
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
         String uploadedFileName = fileService.uploadFile(path, file);
         return ResponseEntity.ok("File uploaded : " + uploadedFileName);
-   }
-   //File Serving
-   @GetMapping("/{fileName}")
-   public void serveFileHandler(@PathVariable String fileName, HttpServletResponse response) throws IOException {
-       InputStream resourceFile = fileService.getResourceFile(path, fileName);
-       response.setContentType(MediaType.IMAGE_PNG_VALUE);
-       StreamUtils.copy(resourceFile, response.getOutputStream());
-   }
+    }
+    //File Serving
+    @GetMapping("/{fileName}")
+    public void serveFileHandler(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+        InputStream resourceFile = fileService.getResourceFile(path, fileName);
+        response.setContentType(MediaType.IMAGE_PNG_VALUE);
+        StreamUtils.copy(resourceFile, response.getOutputStream());
+    }
 }
