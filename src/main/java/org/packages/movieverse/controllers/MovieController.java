@@ -3,11 +3,13 @@ package org.packages.movieverse.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.packages.movieverse.dto.MovieDto;
+import org.packages.movieverse.exceptions.EmptyFileException;
 import org.packages.movieverse.services.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +26,11 @@ public class MovieController {
 
     @PostMapping("/add-movie")         //need to fix here
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart MultipartFile file,
-                                                    @RequestPart String movieDto) throws IOException {
+                                                    @RequestPart String movieDto) throws IOException, EmptyFileException {
+        if (file.isEmpty()) {
+            throw new EmptyFileException("File not found!");
+        }
+
         MovieDto dto = convertToMovieDto(movieDto);
         return new ResponseEntity<>(movieService.addMovie(dto, file), HttpStatus.CREATED);
     }

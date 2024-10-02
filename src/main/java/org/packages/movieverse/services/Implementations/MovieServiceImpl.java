@@ -3,6 +3,8 @@ package org.packages.movieverse.services.Implementations;
 import org.packages.movieverse.Entities.Movie;
 import org.packages.movieverse.Repositories.MovieRepository;
 import org.packages.movieverse.dto.MovieDto;
+import org.packages.movieverse.exceptions.FileExistsException;
+import org.packages.movieverse.exceptions.MovieNotFoundException;
 import org.packages.movieverse.services.FileService;
 import org.packages.movieverse.services.MovieService;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,16 +39,16 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException {
-        // 1. upload the file
+        // upload the file
         if (Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
-            throw new FileAlreadyExistsException("File already exists! Please enter another file name!");
+            throw new FileExistsException("File already exists! Please enter another file name!");
         }
         String uploadedFileName = fileService.uploadFile(path, file);
 
-        // 2. set the value of field 'poster' as filename
+        // set the value of field 'poster' as filename
         movieDto.setPoster(uploadedFileName);
 
-        // 3. map dto to Movie object
+        // map dto to Movie object
         Movie movie = new Movie(
                 null,
                 movieDto.getTitle(),
@@ -57,13 +59,13 @@ public class MovieServiceImpl implements MovieService {
                 movieDto.getPoster()
         );
 
-        // 4. save the movie object -> saved Movie object
+        // save the movie object -> saved Movie object
         Movie savedMovie = movieRepository.save(movie);
 
-        // 5. generate the posterUrl
+        // generate the posterUrl
         String posterUrl = baseUrl + "/file/" + uploadedFileName;
 
-        // 6. map Movie object to DTO object and return it
+        // map Movie object to DTO object and return it
         MovieDto response = new MovieDto(
                 savedMovie.getMovieId(),
                 savedMovie.getTitle(),
@@ -77,17 +79,16 @@ public class MovieServiceImpl implements MovieService {
 
         return response;
     }
-
     @Override
     public MovieDto getMovie(Integer movieId) {
-        // 1. check the data in DB and if exists, fetch the data of given ID
+        // check the data in DB and if exists, fetch the data of given ID
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow();
+                .orElseThrow(() -> new MovieNotFoundException("Movie not found!"));
 
-        // 2. generate posterUrl
+        // generate posterUrl
         String posterUrl = baseUrl + "/file/" + movie.getPoster();
 
-        // 3. map to MovieDto object and return it
+        // map to MovieDto object and return it
         MovieDto response = new MovieDto(
                 movie.getMovieId(),
                 movie.getTitle(),
@@ -131,11 +132,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto updateMovie(Integer movieId, MovieDto movieDto, MultipartFile file) throws IOException {
-        // 1. check if movie object exists with given movieId
+        // check if movie object exists with given movieId
         Movie mv = movieRepository.findById(movieId)
-                .orElseThrow();
+                .orElseThrow(() -> new MovieNotFoundException("Movie not found!"));;
 
-        // 2. if file is null, do nothing
+        // if file is null, do nothing
         // if file is not null, then delete existing file associated with the record,
         // and upload the new file
         String fileName = mv.getPoster();
@@ -144,10 +145,10 @@ public class MovieServiceImpl implements MovieService {
             fileName = fileService.uploadFile(path, file);
         }
 
-        // 3. set movieDto's poster value, according to step2
+        // set movieDto's poster value, according to step2
         movieDto.setPoster(fileName);
 
-        // 4. map it to Movie object
+        // map it to Movie object
         Movie movie = new Movie(
                 mv.getMovieId(),
                 movieDto.getTitle(),
@@ -158,13 +159,13 @@ public class MovieServiceImpl implements MovieService {
                 movieDto.getPoster()
         );
 
-        // 5. save the movie object -> return saved movie object
+        // save the movie object -> return saved movie object
         Movie updatedMovie = movieRepository.save(movie);
 
-        // 6. generate posterUrl for it
+        // generate posterUrl for it
         String posterUrl = baseUrl + "/file/" + fileName;
 
-        // 7. map to MovieDto and return it
+        // map to MovieDto and return it
         MovieDto response = new MovieDto(
                 movie.getMovieId(),
                 movie.getTitle(),
@@ -181,15 +182,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public String deleteMovie(Integer movieId) throws IOException {
-        // 1. check if movie object exists in DB
+        // check if movie object exists in DB
         Movie mv = movieRepository.findById(movieId)
-                .orElseThrow();
+                .orElseThrow(()->  new MovieNotFoundException("Movie not found!"));
         Integer id = mv.getMovieId();
 
-        // 2. delete the file associated with this object
+        // delete the file associated with this object
         Files.deleteIfExists(Paths.get(path + File.separator + mv.getPoster()));
 
-        // 3. delete the movie object
+        // delete the movie object
         movieRepository.delete(mv);
 
         return "Movie deleted with id = " + id;
