@@ -45,6 +45,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!--liquibase Dependency added-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>4.23.0</version> <!-- Use the latest version -->
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.postgresql</groupId>

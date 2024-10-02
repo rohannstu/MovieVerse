@@ -9,11 +9,12 @@ spring:
       show_sql: true
     properties:
       hibernate:
-        formate_sql: true
+        format_sql: true
 
 project:
   poster: poster/
 
 base:
   url: "http://localhost:8080"
+
 
