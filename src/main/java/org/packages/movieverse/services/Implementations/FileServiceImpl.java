@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
             f.mkdirs();
         }
         //copy the file or upload the file to the path
-        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(file.getInputStream(), Paths.get(filePath));
 
         //StandardCopyOption.REPLACE_EXISTING is used because if same file name exits
         //it will replace previous one by the new one
