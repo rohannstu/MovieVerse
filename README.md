@@ -12,5 +12,6 @@ Why Use Liquibase?
     Automation: Liquibase automatically manages schema updates when the application starts, ensuring consistency between your code and database.
 
 Spring Security architechture: 
+![Screenshot from 2024-10-03 13-29-17](https://github.com/user-attachments/assets/fed8f405-421e-4bba-8ec5-25953f3dd7e2)
 
-![Uploading Screenshot from 2024-10-03 13-29-17.png…]()
+
