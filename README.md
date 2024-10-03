@@ -10,3 +10,7 @@ Why Use Liquibase?
     Collaborative Development: When working in teams, Liquibase helps ensure that everyone's database schema stays in sync, avoiding conflicts.
     Rollback Capabilities: You can easily roll back changes in case of issues.
     Automation: Liquibase automatically manages schema updates when the application starts, ensuring consistency between your code and database.
+
+Spring Security architechture: 
+
+![Uploading Screenshot from 2024-10-03 13-29-17.png…]()
