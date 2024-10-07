@@ -1,5 +1,4 @@
-Liquibase: 
-Why Use Liquibase?
+Why Liquibase here?
 
     Database Version Control: Liquibase allows you to track changes in your database schema over time, similar to version control for code.
     Collaborative Development: When working in teams, Liquibase helps ensure that everyone's database schema stays in sync, avoiding conflicts.
