@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Rohan Sinha
+      changes:
+        - createTable:
+            tableName: movie
+            columns:
+              - column:
+                  name: movie_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: director
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: studio
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: release_year
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poster
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: Rohan Sinha
+      changes:
+        - createTable:
+            tableName: movie_cast
+            columns:
+              - column:
+                  name: movie_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cast_member
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: movie_cast
+            baseColumnNames: movie_id
+            referencedTableName: movie
+            constraintName:
+            referencedColumnNames: movie_id
+
