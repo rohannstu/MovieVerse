@@ -19,7 +19,6 @@ public class FileServiceImpl implements FileService {
 
         // to get the file path
         String filePath = path + File.separator + fileName;
-
         // create file object
         File f = new File(path);
         if(!f.exists()) {

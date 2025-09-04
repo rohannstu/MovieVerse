@@ -13,7 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class Movie {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer movieId;
@@ -35,6 +34,7 @@ public class Movie {
     private Set<String> movieCast;
 
     @Column(nullable = false)
+    @NotBlank(message = "please insert a movie's name ")
     private Integer releaseYear;
 
     @Column(nullable = false)
