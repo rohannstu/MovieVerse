@@ -1,21 +1,14 @@
 package org.example.movieapi.Service.ServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import org.example.movieapi.Dto.MovieDto;
 import org.example.movieapi.Entity.Movie;
 import org.example.movieapi.Repository.MovieRepository;
 import org.example.movieapi.Service.FileService;
 import org.example.movieapi.Service.MovieService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,11 +71,50 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto getMovie(Integer movieId) {
-        return null;
+        // 1. check the data in DB and if exists, fetch the data of given ID
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new EntityNotFoundException("Movie with id " + movieId + " not found"));
+
+        // 2. generate posterUrl
+        String posterUrl = baseUrl + "/file/" + movie.getPoster();
+
+        // 3. map to MovieDto object and return it
+
+        return new MovieDto(
+                movie.getMovieId(),
+                movie.getTitle(),
+                movie.getDirector(),
+                movie.getStudio(),
+                movie.getMovieCast(),
+                movie.getReleaseYear(),
+                movie.getPoster(),
+                posterUrl
+        );
     }
 
     @Override
     public List<MovieDto> getAllMovies() {
-        return List.of();
+        // 1. fetch all data from DB
+        List<Movie> movies = movieRepository.findAll();
+
+        List<MovieDto> movieDtos = new ArrayList<>();
+
+        // 2. iterate through the list, generate posterUrl for each movie obj,
+        // and map to MovieDto obj
+        for(Movie movie : movies) {
+            String posterUrl = baseUrl + "/file/" + movie.getPoster();
+            MovieDto movieDto = new MovieDto(
+                    movie.getMovieId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            movieDtos.add(movieDto);
+        }
+
+        return movieDtos;
     }
 }
