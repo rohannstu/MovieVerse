@@ -1,6 +1,7 @@
 package org.example.movieapi.Controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.movieapi.Exceptions.EmptyFileException;
 import org.example.movieapi.Service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class FileController {
     private String path;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException, EmptyFileException {
         String uploadedFileName = fileService.uploadFile(path, file);
         return ResponseEntity.ok("File uploaded : " + uploadedFileName);
     }

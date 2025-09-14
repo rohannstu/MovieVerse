@@ -3,6 +3,7 @@ package org.example.movieapi.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.movieapi.Dto.MovieDto;
+import org.example.movieapi.Exceptions.EmptyFileException;
 import org.example.movieapi.Service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,10 @@ public class MovieController {
     //Post
     @PostMapping("/add-movie")
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart MultipartFile file,
-                                                    @RequestPart String movieDto) throws IOException {
+                                                    @RequestPart String movieDto) throws IOException, EmptyFileException {
+        if (file.isEmpty()) {
+            throw new EmptyFileException("File is empty! Please send another file!");
+        }
         MovieDto dto = convertToMovieDto(movieDto);
         return new ResponseEntity<>(movieService.addMovie(dto, file), HttpStatus.CREATED);
     }
@@ -35,6 +39,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovie(movieId));
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<List<MovieDto>> getAllMoviesHandler() {
         return ResponseEntity.ok(movieService.getAllMovies());
@@ -42,7 +47,7 @@ public class MovieController {
     @PutMapping("/update/{movieId}")
     public ResponseEntity<MovieDto> updateMovieHandler(@PathVariable Integer movieId,
                                                        @RequestPart(required = false) MultipartFile file,
-                                                       @RequestPart String movieDtoObj) throws IOException {
+                                                       @RequestPart String movieDtoObj) throws IOException, EmptyFileException {
         if (file == null || file.isEmpty()) file = null;
         MovieDto movieDto = convertToMovieDto(movieDtoObj);
         return ResponseEntity.ok(movieService.updateMovie(movieId, movieDto, file));
